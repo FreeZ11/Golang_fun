@@ -1,0 +1,13 @@
+CREATE TABLE IF NOT EXISTS users (
+    `id` int UNSIGNED NOT NULL AUTO_INCREMENT,
+    `firstName` VARCHAR(225) NOT NULL,
+    `lastName` VARCHAR(225) NOT NULL,
+    `email` VARCHAR(225) NOT NULL,
+    `password` VARCHAR(225) NOT NULL,
+    `login` VARCHAR(225) NOT NULL,
+    `createdAt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    PRIMARY KEY (id),
+    UNIQUE KEY  (email),
+    UNIQUE KEY (login)
+);
