@@ -31,6 +31,24 @@ func (s *Store) GetUserByEmail(email string) (*types.User, error) {
 	return user, nil
 }
 
+func (s *Store) GetUserByLogin(login string) (*types.GetUserPayload, error) {
+	rows, err := s.db.Query("SELECT firstName, lastName, email, login, createdAt from users WHERE login = ?", login)
+	if err != nil {
+		return nil, err
+	}
+
+	user := new(types.GetUserPayload)
+	for rows.Next() {
+		user, err = scanRowToGetUserPayload(rows)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	return user, nil
+
+}
+
 func (s *Store) CreateUser(user types.User) error {
 	return nil
 }
@@ -43,6 +61,23 @@ func scanRowToUser(rows *sql.Rows) (*types.User, error) {
 		&user.LastName,
 		&user.Email,
 		&user.Password,
+		&user.Login,
+		&user.CreatedAt,
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	return user, nil
+}
+
+func scanRowToGetUserPayload(rows *sql.Rows) (*types.GetUserPayload, error) {
+	user := new(types.GetUserPayload)
+	err := rows.Scan(
+		&user.FirstName,
+		&user.LastName,
+		&user.Email,
+		&user.Login,
 		&user.CreatedAt,
 	)
 	if err != nil {
